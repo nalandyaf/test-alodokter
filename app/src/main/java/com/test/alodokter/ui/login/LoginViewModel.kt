@@ -1,6 +1,7 @@
 package com.test.alodokter.ui.login
 
 import android.text.Editable
+import android.util.Patterns
 import androidx.databinding.ObservableField
 import com.test.alodokter.data.local.PreferencesManager
 import com.test.alodokter.domain.usecases.user.IUserUsecases
@@ -10,9 +11,9 @@ import com.test.alodokter.utils.StringUtils
 
 class LoginViewModel(baseUsecase: IUserUsecases, schedulerProvider: SchedulerProvider) : BaseViewModel<IUserUsecases?, LoginNavigator?>(baseUsecase, schedulerProvider) {
 
-    var username = ObservableField<String>()
+    var email = ObservableField<String>()
     var password = ObservableField<String>()
-    var validUser = ObservableField<Boolean>()
+    var validEmail = ObservableField<Boolean>()
     var validPassword = ObservableField<Boolean>()
 
     var preferencesManager: PreferencesManager? = PreferencesManager.instance
@@ -22,16 +23,16 @@ class LoginViewModel(baseUsecase: IUserUsecases, schedulerProvider: SchedulerPro
     }
 
     fun afterUsernameChanged(s: Editable) {
-        username.set(s.toString())
+        email.set(s.toString())
         checkUsername()
     }
 
     private fun checkUsername() {
-        if (username.get()?.length!! < 6) {
-            navigator!!.errorUsername()
-            validUser.set(false)
+        if (Patterns.EMAIL_ADDRESS.matcher(email.get()).matches()) {
+            validEmail.set(true)
         } else {
-            validUser.set(true)
+            navigator!!.errorEmail()
+            validEmail.set(false)
         }
     }
 
@@ -51,14 +52,14 @@ class LoginViewModel(baseUsecase: IUserUsecases, schedulerProvider: SchedulerPro
     }
 
     fun login() {
-        preferencesManager?.prefUsername = username.get()!!
+        preferencesManager?.prefUsername = email.get()!!
         navigator?.navigateToMain()
     }
 
     fun checkLogin() {
-       if (StringUtils.isNotBlank(preferencesManager?.prefUsername)){
+        if (StringUtils.isNotBlank(preferencesManager?.prefUsername)) {
             navigator?.navigateToMain()
-       }
+        }
     }
 
 }

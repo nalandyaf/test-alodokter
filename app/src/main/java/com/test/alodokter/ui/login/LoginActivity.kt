@@ -36,8 +36,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding?, LoginViewModel>(), Log
     }
 
     override fun login() {}
-    override fun errorUsername() {
-        viewDataBinding?.username?.error = "Minimal 6 Karakter"
+    override fun errorEmail() {
+        viewDataBinding?.username?.error = "Email tidak Valid"
     }
 
     override fun errorPassword() {
